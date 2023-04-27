@@ -121,7 +121,8 @@ final class DAIAFactory
 
     private function createUnavailable (stdClass $data) : Model\Unavailable
     {
-        $unavailable = new Model\Unavailable();
+        $service = $this->createServiceUri($data->service);
+        $unavailable = new Model\Unavailable($service);
         if (isset($data->queue)) {
             $unavailable->setQueue($data->queue);
         }
@@ -138,7 +139,8 @@ final class DAIAFactory
 
     private function createAvailable (stdClass $data) : Model\Available
     {
-        $available = new Model\Available();
+        $service = $this->createServiceUri($data->service);
+        $available = new Model\Available($service);
         if (isset($data->delay)) {
             if ($data->delay === 'unknown') {
                 $available->setDelayUnknown();
@@ -189,13 +191,6 @@ final class DAIAFactory
 
     private function initializeAvailability (Model\Availability $availability, stdClass $data) : void
     {
-        if (isset($data->service)) {
-            if (in_array($data->service, ['presentation', 'loan', 'interloan', 'remote', 'openaccess'], true)) {
-                $availability->setService(new URI('http://purl.org/ontology/dso#' . ucfirst($data->service)));
-            } else {
-                $availability->setService(new URI($data->service));
-            }
-        }
         if (isset($data->href)) {
             $availability->setHref(new URI($data->href));
         }
@@ -219,6 +214,17 @@ final class DAIAFactory
         }
         if (isset($data->content)) {
             $entity->setContent($data->content);
+        }
+
+    }
+
+    private function createServiceUri (string $service) : URI
+    {
+            if (in_array($service, ['presentation', 'loan', 'interloan', 'remote', 'openaccess'], true)) {
+                return new URI('http://purl.org/ontology/dso#' . ucfirst($service));
+            } else {
+                return new URI($service);
+            }
         }
 
     }
