@@ -220,12 +220,10 @@ final class DAIAFactory
 
     private function createServiceUri (string $service) : URI
     {
-            if (in_array($service, ['presentation', 'loan', 'interloan', 'remote', 'openaccess'], true)) {
-                return new URI('http://purl.org/ontology/dso#' . ucfirst($service));
-            } else {
-                return new URI($service);
-            }
-        }
-
+        if (in_array($service, ['presentation', 'loan', 'interloan', 'remote', 'openaccess'], true)) {
+            return new URI('http://purl.org/ontology/dso#' . ucfirst($service));
+        } else {
+            return new URI($service);
+        }    
     }
 }
