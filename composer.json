@@ -1,4 +1,5 @@
 {
+    "name": "subhh/daia-factory",
     "autoload": {
         "psr-4": {
             "SUBHH\\DAIA\\Factory\\": [ "src/main/php", "src/test/php"]
