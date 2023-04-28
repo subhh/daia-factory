@@ -29,6 +29,7 @@ use SUBHH\DAIA\Model;
 use Swaggest\JsonSchema;
 use GuzzleHttp\Psr7\Uri;
 
+use InvalidArgumentException;
 use RuntimeException;
 use DateInterval;
 use DateTimeImmutable;
@@ -49,6 +50,17 @@ final class DAIASimpleFactory
             );
         }
         $this->schema = JsonSchema\Schema::import(json_decode($schemaContent));
+    }
+
+    public function createFromJson (string $json) : Model\DAIASimple
+    {
+        $data = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+        if ($data instanceof stdClass) {
+            return $this->createFromDecodedJson($data);
+        }
+        throw new InvalidArgumentException(
+            sprintf('The encoded JSON string does not decode to an JSON object: %s', $json)
+        );
     }
 
     public function createFromDecodedJson (stdClass $data) : Model\DAIASimple
