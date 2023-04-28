@@ -29,21 +29,29 @@ use SUBHH\DAIA\Model;
 use Swaggest\JsonSchema;
 use GuzzleHttp\Psr7\Uri;
 
+use RuntimeException;
 use DateInterval;
 use DateTimeImmutable;
 use stdClass;
 
 final class DAIAFactory
 {
-    /** @var JsonSchema\Schema */
+    /** @var JsonSchema\SchemaContract */
     private $schema;
 
-    public function __construct (JsonSchema\Schema $schema)
+    public function __construct ()
     {
-        $this->schema = $schema;
+        $schemaUri = __DIR__ . '/../resources/daia.schema.json';
+        $schemaContent = file_get_contents($schemaUri);
+        if ($schemaContent === false) {
+            throw new RuntimeException(
+                sprintf('Unable to read DAIA schema specification: %s', $schemaUri)
+            );
+        }
+        $this->schema = JsonSchema\Schema::import(json_decode($schemaContent));
     }
 
-    public function newInstance (stdClass $data) : Model\DAIA
+    public function createFromDecodedJson (stdClass $data) : Model\DAIA
     {
         $this->schema->in($data);
         $daia = new Model\DAIA();
@@ -224,6 +232,6 @@ final class DAIAFactory
             return new URI('http://purl.org/ontology/dso#' . ucfirst($service));
         } else {
             return new URI($service);
-        }    
+        }
     }
 }
