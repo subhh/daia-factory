@@ -125,6 +125,9 @@ final class DAIAFactory
         if (isset($data->chronology)) {
             $item->setChronology($this->createChronology($data->chronology));
         }
+        if (isset($data->label)) {
+            $item->setLabel($data->label);
+        }
         if (isset($data->available)) {
             foreach ($data->available as $available) {
                 $item->addAvailable($this->createAvailable($available));
