@@ -75,6 +75,9 @@ class DAIAFactory
     public function createDocument (stdClass|array $data) : Model\Document
     {
         $props = is_array($data) ? $data : get_object_vars($data);
+        if (!array_key_exists('id', $props)) {
+            throw new InvalidArgumentException("The required property 'id' is missing");
+        }
         $document = new Model\Document(new Uri($props['id']));
         foreach ($props as $name => $value) {
             switch ($name) {
@@ -153,6 +156,10 @@ class DAIAFactory
     public function createUnavailable (stdClass|array $data) : Model\Unavailable
     {
         $props = is_array($data) ? $data : get_object_vars($data);
+        if (!array_key_exists('service', $props)) {
+            throw new InvalidArgumentException("The required property 'service' is missing");
+        }
+
         $service = $this->createService($props['service']);
         $unavailable = new Model\Unavailable($service);
         foreach ($props as $name => $value) {
@@ -189,6 +196,10 @@ class DAIAFactory
     public function createAvailable (stdClass|array $data) : Model\Available
     {
         $props = is_array($data) ? $data : get_object_vars($data);
+        if (!array_key_exists('service', $props)) {
+            throw new InvalidArgumentException("The required property 'service' is missing");
+        }
+
         $service = $this->createService($props['service']);
         $available = new Model\Available($service);
         foreach ($props as $name => $value) {
