@@ -12,9 +12,8 @@
         }
     },
     "require": {
-        "subhh/daia-model": "dev-dev",
+        "subhh/daia-model": "dev-main",
         "guzzlehttp/psr7": "^2.4",
-        "swaggest/json-schema": "^0.12",
         "php": "^8.0"
     }
 }

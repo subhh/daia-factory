@@ -26,32 +26,15 @@ declare(strict_types=1);
 namespace SUBHH\DAIA\Factory;
 
 use SUBHH\DAIA\Model;
-use Swaggest\JsonSchema;
 use GuzzleHttp\Psr7\Uri;
 
 use InvalidArgumentException;
-use RuntimeException;
 use DateInterval;
 use DateTimeImmutable;
 use stdClass;
 
 class DAIAFactory
 {
-    /** @var JsonSchema\SchemaContract */
-    private $schema;
-
-    public function __construct ()
-    {
-        $schemaUri = __DIR__ . '/../resources/daia.schema.json';
-        $schemaContent = file_get_contents($schemaUri);
-        if ($schemaContent === false) {
-            throw new RuntimeException(
-                sprintf('Unable to read DAIA schema specification: %s', $schemaUri)
-            );
-        }
-        $this->schema = JsonSchema\Schema::import(json_decode($schemaContent));
-    }
-
     public function createFromJson (string $json) : Model\DAIA
     {
         $data = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
@@ -66,7 +49,6 @@ class DAIAFactory
     /** @param stdClass|mixed[] $data */
     public function createFromDecodedJson (stdClass|array $data) : Model\DAIA
     {
-        $this->schema->in($data);
         $daia = new Model\DAIA();
         $props = is_array($data) ? $data : get_object_vars($data);
         foreach ($props as $name => $value) {
