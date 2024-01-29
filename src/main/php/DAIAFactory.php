@@ -83,9 +83,9 @@ final class DAIAFactory
 
     private function createDocument (stdClass $data) : Model\Document
     {
-        $document = new Model\Document(new URI($data->id));
+        $document = new Model\Document(new Uri($data->id));
         if (isset($data->href)) {
-            $document->setHref(new URI($data->href));
+            $document->setHref(new Uri($data->href));
         }
         if (isset($data->requested)) {
             $document->setRequested($data->requested);
@@ -105,10 +105,10 @@ final class DAIAFactory
     {
         $item = new Model\Item();
         if (isset($data->id)) {
-            $item->setId(new URI($data->id));
+            $item->setId(new Uri($data->id));
         }
         if (isset($data->href)) {
-            $item->setHref(new URI($data->href));
+            $item->setHref(new Uri($data->href));
         }
         if (isset($data->about)) {
             $item->setAbout($data->about);
@@ -144,7 +144,7 @@ final class DAIAFactory
 
     private function createUnavailable (stdClass $data) : Model\Unavailable
     {
-        $service = $this->createServiceUri($data->service);
+        $service = $this->createService($data->service);
         $unavailable = new Model\Unavailable($service);
         if (isset($data->queue)) {
             $unavailable->setQueue($data->queue);
@@ -162,7 +162,7 @@ final class DAIAFactory
 
     private function createAvailable (stdClass $data) : Model\Available
     {
-        $service = $this->createServiceUri($data->service);
+        $service = $this->createService($data->service);
         $available = new Model\Available($service);
         if (isset($data->delay)) {
             if ($data->delay === 'unknown') {
@@ -215,7 +215,7 @@ final class DAIAFactory
     private function initializeAvailability (Model\Availability $availability, stdClass $data) : void
     {
         if (isset($data->href)) {
-            $availability->setHref(new URI($data->href));
+            $availability->setHref(new Uri($data->href));
         }
         if (isset($data->title)) {
             $availability->setTitle($data->title);
@@ -230,10 +230,10 @@ final class DAIAFactory
     private function initializeEntity (Model\Entity $entity, stdClass $data) : void
     {
         if (isset($data->id)) {
-            $entity->setId(new URI($data->id));
+            $entity->setId(new Uri($data->id));
         }
         if (isset($data->href)) {
-            $entity->setHref(new URI($data->href));
+            $entity->setHref(new Uri($data->href));
         }
         if (isset($data->content)) {
             $entity->setContent($data->content);
@@ -241,12 +241,17 @@ final class DAIAFactory
 
     }
 
-    private function createServiceUri (string $service) : URI
+    private function createService (string $service) : Model\Service
+    {
+        return new Model\Service($this->createServiceUri($service));
+    }
+
+    private function createServiceUri (string $service) : Uri
     {
         if (in_array($service, ['presentation', 'loan', 'interloan', 'remote', 'openaccess'], true)) {
-            return new URI('http://purl.org/ontology/dso#' . ucfirst($service));
+            return new Uri('http://purl.org/ontology/dso#' . ucfirst($service));
         } else {
-            return new URI($service);
+            return new Uri($service);
         }
     }
 }

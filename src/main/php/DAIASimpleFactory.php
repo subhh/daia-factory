@@ -97,7 +97,7 @@ final class DAIASimpleFactory
     private function initializeDAIASimple (Model\DAIASimple $daia, stdClass $data) : void
     {
         if (isset($data->href)) {
-            $daia->setHref(new URI($data->href));
+            $daia->setHref(new Uri($data->href));
         }
         if (isset($data->limitation)) {
             $daia->setLimitation($data->limitation);
