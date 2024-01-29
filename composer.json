@@ -1,12 +1,18 @@
 {
     "name": "subhh/daia-factory",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/subhh/daia-model"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "SUBHH\\DAIA\\Factory\\": [ "src/main/php", "src/test/php"]
         }
     },
     "require": {
-        "subhh/daia-model": "^1.3",
+        "subhh/daia-model": "dev-dev",
         "guzzlehttp/psr7": "^2.4",
         "swaggest/json-schema": "^0.12"
     }
