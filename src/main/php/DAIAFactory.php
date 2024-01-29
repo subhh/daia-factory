@@ -241,12 +241,7 @@ final class DAIAFactory
 
     }
 
-    private function createService (string $service) : Model\Service
-    {
-        return new Model\Service($this->createServiceUri($service));
-    }
-
-    private function createServiceUri (string $service) : Uri
+    private function createService (string $service) : Uri
     {
         if (in_array($service, ['presentation', 'loan', 'interloan', 'remote', 'openaccess'], true)) {
             return new Uri('http://purl.org/ontology/dso#' . ucfirst($service));
