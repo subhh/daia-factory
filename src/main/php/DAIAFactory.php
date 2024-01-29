@@ -81,7 +81,7 @@ final class DAIAFactory
         return $daia;
     }
 
-    private function createDocument (stdClass $data) : Model\Document
+    public function createDocument (stdClass $data) : Model\Document
     {
         $document = new Model\Document(new Uri($data->id));
         if (isset($data->href)) {
@@ -101,7 +101,7 @@ final class DAIAFactory
         return $document;
     }
 
-    private function createItem (stdClass $data) : Model\Item
+    public function createItem (stdClass $data) : Model\Item
     {
         $item = new Model\Item();
         if (isset($data->id)) {
@@ -142,7 +142,7 @@ final class DAIAFactory
         return $item;
     }
 
-    private function createUnavailable (stdClass $data) : Model\Unavailable
+    public function createUnavailable (stdClass $data) : Model\Unavailable
     {
         $service = $this->createService($data->service);
         $unavailable = new Model\Unavailable($service);
@@ -160,7 +160,7 @@ final class DAIAFactory
         return $unavailable;
     }
 
-    private function createAvailable (stdClass $data) : Model\Available
+    public function createAvailable (stdClass $data) : Model\Available
     {
         $service = $this->createService($data->service);
         $available = new Model\Available($service);
@@ -175,7 +175,7 @@ final class DAIAFactory
         return $available;
     }
 
-    private function createChronology (stdClass $data) : Model\Chronology
+    public function createChronology (stdClass $data) : Model\Chronology
     {
         $chronology = new Model\Chronology();
         if (isset($data->about)) {
@@ -184,28 +184,28 @@ final class DAIAFactory
         return $chronology;
     }
 
-    private function createInstitution (stdClass $data) : Model\Institution
+    public function createInstitution (stdClass $data) : Model\Institution
     {
         $institution = new Model\Institution();
         $this->initializeEntity($institution, $data);
         return $institution;
     }
 
-    private function createStorage (stdClass $data) : Model\Storage
+    public function createStorage (stdClass $data) : Model\Storage
     {
         $storage = new Model\Storage();
         $this->initializeEntity($storage, $data);
         return $storage;
     }
 
-    private function createDepartment (stdClass $data) : Model\Department
+    public function createDepartment (stdClass $data) : Model\Department
     {
         $department = new Model\Department();
         $this->initializeEntity($department, $data);
         return $department;
     }
 
-    private function createLimitation (stdClass $data) : Model\Limitation
+    public function createLimitation (stdClass $data) : Model\Limitation
     {
         $limitation = new Model\Limitation();
         $this->initializeEntity($limitation, $data);
