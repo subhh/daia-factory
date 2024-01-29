@@ -35,7 +35,7 @@ use DateInterval;
 use DateTimeImmutable;
 use stdClass;
 
-final class DAIAFactory
+class DAIAFactory
 {
     /** @var JsonSchema\SchemaContract */
     private $schema;
