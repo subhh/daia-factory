@@ -63,182 +63,239 @@ final class DAIAFactory
         );
     }
 
-    public function createFromDecodedJson (stdClass $data) : Model\DAIA
+    /** @param stdClass|mixed[] $data */
+    public function createFromDecodedJson (stdClass|array $data) : Model\DAIA
     {
         $this->schema->in($data);
         $daia = new Model\DAIA();
-        if (isset($data->timestamp)) {
-            $daia->setTimestamp(new DateTimeImmutable($data->timestamp));
-        }
-        if (isset($data->institution)) {
-            $daia->setInstitution($this->createInstitution($data->institution));
-        }
-        if (isset($data->document)) {
-            foreach ($data->document as $document) {
-                $daia->addDocument($this->createDocument($document));
+        $props = is_array($data) ? $data : get_object_vars($data);
+        foreach ($props as $name => $value) {
+            switch ($name) {
+            case 'timestamp':
+                $daia->setTimestamp(new DateTimeImmutable($value));
+                break;
+            case 'institution':
+                $daia->setInstitution($this->createInstitution($value));
+                break;
+            case 'document':
+                foreach ($value as $document) {
+                    $daia->addDocument($this->createDocument($document));
+                }
+                break;
+            default:
+                $daia->getProperties()[$name] = $value;
             }
         }
         return $daia;
     }
 
-    public function createDocument (stdClass $data) : Model\Document
+    /** @param stdClass|mixed[] $data */
+    public function createDocument (stdClass|array $data) : Model\Document
     {
-        $document = new Model\Document(new Uri($data->id));
-        if (isset($data->href)) {
-            $document->setHref(new Uri($data->href));
-        }
-        if (isset($data->requested)) {
-            $document->setRequested($data->requested);
-        }
-        if (isset($data->about)) {
-            $document->setAbout($data->about);
-        }
-        if (isset($data->item)) {
-            foreach ($data->item as $item) {
-                $document->addItem($this->createItem($item));
+        $props = is_array($data) ? $data : get_object_vars($data);
+        $document = new Model\Document(new Uri($props['id']));
+        foreach ($props as $name => $value) {
+            switch ($name) {
+            case 'id':
+                break;
+            case 'href':
+                $document->setHref(new Uri($value));
+                break;
+            case 'requested':
+                $document->setRequested($value);
+                break;
+            case 'about':
+                $document->setAbout($value);
+                break;
+            case 'item':
+                foreach ($value as $item) {
+                    $document->addItem($this->createItem($item));
+                }
+                break;
+            default:
+                $document->getProperties()[$name] = $value;
             }
         }
         return $document;
     }
 
-    public function createItem (stdClass $data) : Model\Item
+    /** @param stdClass|mixed[] $data */
+    public function createItem (stdClass|array $data) : Model\Item
     {
         $item = new Model\Item();
-        if (isset($data->id)) {
-            $item->setId(new Uri($data->id));
-        }
-        if (isset($data->href)) {
-            $item->setHref(new Uri($data->href));
-        }
-        if (isset($data->about)) {
-            $item->setAbout($data->about);
-        }
-        if (isset($data->part)) {
-            $item->setPart($data->part);
-        }
-        if (isset($data->department)) {
-            $item->setDepartment($this->createDepartment($data->department));
-        }
-        if (isset($data->storage)) {
-            $item->setStorage($this->createStorage($data->storage));
-        }
-        if (isset($data->chronology)) {
-            $item->setChronology($this->createChronology($data->chronology));
-        }
-        if (isset($data->label)) {
-            $item->setLabel($data->label);
-        }
-        if (isset($data->available)) {
-            foreach ($data->available as $available) {
-                $item->addAvailable($this->createAvailable($available));
+        $props = is_array($data) ? $data : get_object_vars($data);
+        foreach ($props as $name => $value) {
+            switch ($name) {
+            case 'id':
+                $item->setId(new Uri($value));
+                break;
+            case 'about':
+                $item->setAbout($value);
+                break;
+            case 'part':
+                $item->setPart($value);
+                break;
+            case 'href':
+                $item->setHref(new Uri($value));
+                break;
+            case 'department':
+                $item->setDepartment($this->createDepartment($value));
+                break;
+            case 'storage':
+                $item->setStorage($this->createStorage($value));
+                break;
+            case 'chronology':
+                $item->setChronology($this->createChronology($value));
+                break;
+            case 'label':
+                $item->setLabel($value);
+                break;
+            case 'available':
+                foreach ($value as $available) {
+                    $item->addAvailable($this->createAvailable($available));
+                }
+                break;
+            case 'unavailable':
+                foreach ($value as $unavailable) {
+                    $item->addUnavailable($this->createUnavailable($unavailable));
+                }
+                break;
+            default:
+                $item->getProperties()[$name] = $value;
             }
         }
-        if (isset($data->unavailable)) {
-            foreach ($data->unavailable as $unavailable) {
-                $item->addUnavailable($this->createUnavailable($unavailable));
-            }
-        }
-
         return $item;
     }
 
-    public function createUnavailable (stdClass $data) : Model\Unavailable
+    /** @param stdClass|mixed[] $data */
+    public function createUnavailable (stdClass|array $data) : Model\Unavailable
     {
-        $service = $this->createService($data->service);
+        $props = is_array($data) ? $data : get_object_vars($data);
+        $service = $this->createService($props['service']);
         $unavailable = new Model\Unavailable($service);
-        if (isset($data->queue)) {
-            $unavailable->setQueue($data->queue);
-        }
-        if (isset($data->expected)) {
-            if ($data->expected === 'unknown') {
-                $unavailable->setExpectedUnknown();
-            } else {
-                $unavailable->setExpected(new DateTimeImmutable($data->expected));
+        foreach ($props as $name => $value) {
+            switch ($name) {
+            case 'queue':
+                $unavailable->setQueue($value);
+                exit;
+            case 'expected':
+                if ($value === 'unknown') {
+                    $unavailable->setExpectedUnknown();
+                } else {
+                    $unavailable->setExpected(new DateTimeImmutable($value));
+                }
+                break;
+            case 'href':
+                $unavailable->setHref(new Uri($value));
+                break;
+            case 'title':
+                $unavailable->setTitle($value);
+                break;
+            case 'limitation':
+                foreach ($value as $limitation) {
+                    $unavailable->addLimitation($this->createLimitation($limitation));
+                }
+                break;
+            default:
+                $unavailable->getProperties()[$name] = $value;
             }
         }
-        $this->initializeAvailability($unavailable, $data);
         return $unavailable;
     }
 
-    public function createAvailable (stdClass $data) : Model\Available
+    /** @param stdClass|mixed[] $data */
+    public function createAvailable (stdClass|array $data) : Model\Available
     {
-        $service = $this->createService($data->service);
+        $props = is_array($data) ? $data : get_object_vars($data);
+        $service = $this->createService($props['service']);
         $available = new Model\Available($service);
-        if (isset($data->delay)) {
-            if ($data->delay === 'unknown') {
-                $available->setDelayUnknown();
-            } else {
-                $available->setDelay(new DateInterval($data->delay));
+        foreach ($props as $name => $value) {
+            switch ($name) {
+            case 'delay':
+                if ($value === 'unknown') {
+                    $available->setDelayUnknown();
+                } else {
+                    $available->setDelay(new DateInterval($value));
+                }
+                break;
+            case 'href':
+                $available->setHref(new Uri($value));
+                break;
+            case 'title':
+                $available->setTitle($value);
+                break;
+            case 'limitation':
+                foreach ($value as $limitation) {
+                    $available->addLimitation($this->createLimitation($limitation));
+                }
+                break;
+            default:
+                $available->getProperties()[$name] = $value;
             }
         }
-        $this->initializeAvailability($available, $data);
         return $available;
     }
 
-    public function createChronology (stdClass $data) : Model\Chronology
+    /** @param stdClass|mixed[] $data */
+    public function createChronology (stdClass|array $data) : Model\Chronology
     {
+        $props = is_array($data) ? $data : get_object_vars($data);
         $chronology = new Model\Chronology();
-        if (isset($data->about)) {
-            $chronology->setAbout($data->about);
+        if (isset($props['about'])) {
+            $chronology->setAbout($props['about']);
         }
         return $chronology;
     }
 
-    public function createInstitution (stdClass $data) : Model\Institution
+    /** @param stdClass|mixed[] $data */
+    public function createInstitution (stdClass|array $data) : Model\Institution
     {
         $institution = new Model\Institution();
         $this->initializeEntity($institution, $data);
         return $institution;
     }
 
-    public function createStorage (stdClass $data) : Model\Storage
+    /** @param stdClass|mixed[] $data */
+    public function createStorage (stdClass|array $data) : Model\Storage
     {
         $storage = new Model\Storage();
         $this->initializeEntity($storage, $data);
         return $storage;
     }
 
-    public function createDepartment (stdClass $data) : Model\Department
+    /** @param stdClass|mixed[] $data */
+    public function createDepartment (stdClass|array $data) : Model\Department
     {
         $department = new Model\Department();
         $this->initializeEntity($department, $data);
         return $department;
     }
 
-    public function createLimitation (stdClass $data) : Model\Limitation
+    /** @param stdClass|mixed[] $data */
+    public function createLimitation (stdClass|array $data) : Model\Limitation
     {
         $limitation = new Model\Limitation();
         $this->initializeEntity($limitation, $data);
         return $limitation;
     }
 
-    private function initializeAvailability (Model\Availability $availability, stdClass $data) : void
+    /** @param stdClass|mixed[] $data */
+    private function initializeEntity (Model\Entity $entity, stdClass|array $data) : void
     {
-        if (isset($data->href)) {
-            $availability->setHref(new Uri($data->href));
-        }
-        if (isset($data->title)) {
-            $availability->setTitle($data->title);
-        }
-        if (isset($data->limitation)) {
-            foreach ($data->limitation as $limitation) {
-                $availability->addLimitation($this->createLimitation($limitation));
+        $props = is_array($data) ? $data : get_object_vars($data);
+        foreach ($props as $name => $value) {
+            switch ($name) {
+            case 'id':
+                $entity->setId(new Uri($value));
+                break;
+            case 'href':
+                $entity->setHref(new Uri($value));
+                break;
+            case 'content':
+                $entity->setContent($value);
+                break;
             }
         }
-    }
-
-    private function initializeEntity (Model\Entity $entity, stdClass $data) : void
-    {
-        if (isset($data->id)) {
-            $entity->setId(new Uri($data->id));
-        }
-        if (isset($data->href)) {
-            $entity->setHref(new Uri($data->href));
-        }
-        if (isset($data->content)) {
-            $entity->setContent($data->content);
-        }
-
     }
 
     private function createService (string $service) : Uri
