@@ -164,6 +164,8 @@ class DAIAFactory
         $unavailable = new Model\Unavailable($service);
         foreach ($props as $name => $value) {
             switch ($name) {
+            case 'service':
+                break;
             case 'queue':
                 $unavailable->setQueue($value);
                 exit;
@@ -204,6 +206,8 @@ class DAIAFactory
         $available = new Model\Available($service);
         foreach ($props as $name => $value) {
             switch ($name) {
+            case 'service':
+                break;
             case 'delay':
                 if ($value === 'unknown') {
                     $available->setDelayUnknown();
