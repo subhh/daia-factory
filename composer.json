@@ -9,7 +9,7 @@
         {
             "type": "vcs",
             "url": "https://github.com/subhh/daia-model.git"
-        },
+        }
     ],
     "require": {
         "subhh/daia-model": "dev-main",
