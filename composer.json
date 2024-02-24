@@ -5,8 +5,14 @@
             "SUBHH\\DAIA\\Factory\\": [ "src/main/php", "src/test/php"]
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/subhh/daia-model.git"
+        },
+    ],
     "require": {
-        "subhh/daia-model": "^2.1",
+        "subhh/daia-model": "dev-main",
         "guzzlehttp/psr7": "^2.4",
         "php": "^8.0"
     }
