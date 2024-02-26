@@ -168,7 +168,7 @@ class DAIAFactory
                 break;
             case 'queue':
                 $unavailable->setQueue($value);
-                exit;
+                break;
             case 'expected':
                 if ($value === 'unknown') {
                     $unavailable->setExpectedUnknown();
